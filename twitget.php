@@ -13,7 +13,7 @@
 	
 	// Lets register things
 	if(!class_exists('Loklak')) {
-		require 'lib/loklak_php_api/loklak.php'
+		require 'lib/loklak_php_api/loklak.php';
 	}
 	if(!class_exists('tmhOAuth')) {
 		require 'lib/tmhOAuth.php';
@@ -37,7 +37,7 @@
 	$twitget_plugin_install_options = array(
 		'twitter_username' => '',
 		'use_https_url' => false,
-		'twitter_data' => NULL,
+		'tweet_data' => NULL,
 		'last_access' => time(),
 		'time_limit' => 5,
 		'number_of_tweets' => 5,
@@ -241,7 +241,7 @@
 			$response = $loklak->search('', null, null, $options['twitter_username']);
 			$response = json_decode($response, true);
             $response = json_decode($response['body'], true);
-            $options['twitter_data'] = json_encode($response['statuses']);
+            $options['tweet_data'] = json_encode($response['statuses']);
 		}
 
 		else if($options['twitter_api'] == 0) {
@@ -265,7 +265,7 @@
 	 
 			$response = $tmhOAuth->response['response'];
 
-			$options['twitter_data'] = $response;
+			$options['tweet_data'] = $response;
 			
 		}
 		else {
@@ -292,7 +292,7 @@
 			$requestMethod = 'GET';
 			$response = $twitter->setGetfield($getfield)->buildOauth($url, $requestMethod)->performRequest();
 
-			$options['twitter_data'] = $response;
+			$options['tweet_data'] = $response;
 			
 		}
 
@@ -364,7 +364,7 @@
 		$options = get_option('twitget_settings');
 		$get_data = false;
 		
-		if(!isset($options['twitter_data'])) {
+		if(!isset($options['tweet_data'])) {
 			$get_data = true;
 		}
 		
@@ -384,11 +384,11 @@
 		unset($options);
 		$options = get_option('twitget_settings');
 		
-		if(!is_array($options["twitter_data"])) {
-			$tweets = json_decode($options['twitter_data'], true);
+		if(!is_array($options["tweet_data"])) {
+			$tweets = json_decode($options['tweet_data'], true);
 		}
 		else {
-			$tweets = $options['twitter_data'];	
+			$tweets = $options['tweet_data'];	
 		}
 		
 		if(is_array($tweets) && isset($tweets) && isset($tweets[0]['user'])) {
@@ -733,6 +733,7 @@
 				$twitget_settings['number_of_tweets'] = (int) $_POST['twitget_number'];
 				$twitget_settings['time_format'] = stripslashes($_POST['twitget_time']);
 				$twitget_settings['show_powered_by'] = (isset($show_powered)) ? true : false;
+				$twidget_settings['loklak_api'] = (int) ($POST['loklak_api']);
 				$twitget_settings['consumer_key'] = stripslashes($_POST['twitget_consumer_key']);
 				$twitget_settings['consumer_secret'] = stripslashes($_POST['twitget_consumer_secret']);
 				$twitget_settings['user_token'] = stripslashes($_POST['twitget_user_token']);
@@ -800,6 +801,14 @@
 							<input type="text" name="twitget_username" id="twitget_username" value="<?php echo esc_attr($twitget_options['twitter_username']); ?>" />
 							<br />
             				<span class="description">Your Twitter username.</span>
+						</td>
+					</tr>
+					<tr>
+						<th scope="row"><label for="loklak_api">Loklak Library</label></th>
+						<td>
+							<input type="checkbox" name="loklak_api" id="loklak_api" value="true" <?php if($twitget_options['loklak_api'] == true) { ?>checked="checked"<?php } ?> />
+							<br />
+            				<span class="description">Use anonymous API of <a href="http://loklak.org/">loklak.org</a> and get plugin data through loklak (no registration and authentication required).<a href="http://loklak.org/">Find out more</a></span>
 						</td>
 					</tr>
 					<tr>
@@ -1021,7 +1030,7 @@
 	// Here, the widget code begins
 	class simple_tweet_widget extends WP_Widget {
 		
-		function simple_tweet_widget() {
+		function __construct() {
 			$widget_ops = array('classname' => 'simple_tweet_widget', 'description' => 'Display your recent tweets.' );			
 			parent::__construct('simple_tweet_widget', 'Twitget', $widget_ops);
 		}
