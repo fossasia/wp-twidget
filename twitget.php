@@ -12,6 +12,9 @@
 	// Wordpress formalities here ...
 	
 	// Lets register things
+	if(!class_exists('Loklak')) {
+		require 'lib/loklak_php_api/loklak.php'
+	}
 	if(!class_exists('tmhOAuth')) {
 		require 'lib/tmhOAuth.php';
 	}
@@ -43,6 +46,7 @@
 		'show_powered_by' => false,
 		'language' => 'en',
 		'version' => '3.38',
+		'loklak_api' => true,
 		'consumer_key' => '',
 		'consumer_secret' => '',
 		'user_token' => '',
@@ -232,7 +236,15 @@
 	
 		$options = get_option('twitget_settings');
 
-		if($options['twitter_api'] == 0) {
+		if($options['loklak_api']) {
+			$loklak = new Loklak();
+			$response = $loklak->search('', null, null, $options['twitter_username']);
+			$response = json_decode($response, true);
+            $response = json_decode($response['body'], true);
+            $options['twitter_data'] = json_encode($response['statuses']);
+		}
+
+		else if($options['twitter_api'] == 0) {
 			
 			$tmhOAuth = new tmhOAuth(
 										array(
