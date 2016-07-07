@@ -31,6 +31,7 @@
 	add_action('widgets_init', create_function('', 'return register_widget("simple_tweet_widget");')); // Register the widget
 	add_shortcode('twitget', 'twitget_shortcode_handler');
 	add_action('wp_head', 'twitget_js_include');
+	add_action('admin_enqueue_scripts', 'twidget_auth_disable_js_include' );
 	add_action('init', 'twitget_jquery_include');
 	
 	global $twitget_plugin_install_options;
@@ -180,6 +181,12 @@
 		wp_enqueue_script('moment.js');
 		wp_register_script('langs.js', $lang_js);
 		wp_enqueue_script('langs.js');
+	}
+
+	function twidget_auth_disable_js_include() {
+		$twitter_auth_disable_js = plugin_dir_url(__FILE__).'js/twitter_auth_disable.js';
+		wp_register_script('twitter_auth_disable.js', $twitter_auth_disable_js);
+		wp_enqueue_script('twitter_auth_disable.js');	
 	}
 
 	
