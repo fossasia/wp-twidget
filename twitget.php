@@ -46,7 +46,7 @@
 		'show_powered_by' => false,
 		'language' => 'en',
 		'version' => '3.38',
-		'loklak_api' => true,
+		'loklak_api' => false,
 		'consumer_key' => '',
 		'consumer_secret' => '',
 		'user_token' => '',
@@ -239,9 +239,18 @@
 		if($options['loklak_api']) {
 			$loklak = new Loklak();
 			$response = $loklak->search('', null, null, $options['twitter_username']);
+			$user = $loklak->user($options['twitter_username']);
+			$user = json_decode($user, true);
+			$user = json_decode($user['body'], true);
 			$response = json_decode($response, true);
             $response = json_decode($response['body'], true);
-            $options['tweet_data'] = json_encode($response['statuses']);
+            $response = $response['statuses'];
+            for ($i=0; $i < sizeof($response); $i++) { 
+            	$response[$i] = array_merge($response[$i], $user);
+            }
+            	
+            
+            $options['tweet_data'] = $response;
 		}
 
 		else if($options['twitter_api'] == 0) {
@@ -415,7 +424,7 @@
 			$tweet_date_array = array();
 			foreach($tweets as $tweet) {
 				$tweet_text = $tweet['text'];
-				$tweet_location = $tweet['place']['full_name'];
+				$tweet_location = $options['loklak_api'] ? $tweet['place_name'] : $tweet['place']['full_name'];
 				$link_processed = "";
 				if(isset($tweet['retweeted_status'])) {
 					$first = current(explode(":", $tweet_text));
@@ -763,7 +772,7 @@
 		}
 
 		$twitget_options = get_option('twitget_settings');
-		
+
 		$twitget_options["time_format"];
 		
 ?>
