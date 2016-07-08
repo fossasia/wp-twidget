@@ -528,8 +528,12 @@
 		
 		}
 		else {
-			$result = "Twitter outputted an error: <br />";
-			$result .= $tweets['errors'][0]['message'].".";
+			if($options['loklak_api']) 
+				$result = "Can't reach Loklak API";
+			else {
+				$result = "Twitter outputted an error: <br />";
+				$result .= $tweets['errors'][0]['message'].".";
+			}
 		}
 
 		echo $result;
