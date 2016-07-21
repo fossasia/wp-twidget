@@ -1,4 +1,5 @@
 === Plugin Name ===
+
 Contributors: ZeroCool51
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=SKMW3BAC8KE52
 Tags: twitter widget, twitter, simple twitter widget, custom twitter, widget, tweet, twitter sidebar, twitter 1.1 api
@@ -39,9 +40,20 @@ None at the moment.
 == Screenshots ==
 
 1. Twitter feed (widget in action on first blog)
+
+	![First blog feed](./screenshot-1.png)
+
 2. Twitter feed (widget in action on second blog)
+
+	![Feed](./screenshot-2.png)
+
 3. Twitget settings page
+
+	![Settings Page](./screenshot-3.png)
+
 4. Available variables for custom HTML output and example
+
+	![HTML output](./screenshot-4.png)
 
 == Changelog ==
 
@@ -172,9 +184,11 @@ None at the moment.
 == Upgrade Notice ==
 
 = 2.0.1 =
+
 Please urgently update, the plugin keeps updating itself because the version variable is not set correctly and it also slows down plugin performance.
 
 = 2.0 =
+
 This upgrade deprecates all previous HTML fields (before, after, suffix, before tweet etc.) and instead uses the provided custom HTML output template.
 
 It also deprecates the use of the Twitter API 1.0, but the settings are still available.
@@ -189,13 +203,16 @@ To use the Twitter 1.1 API you need to create an application. Follow this Youtub
 
 You can fully customize your HTML output via variables. Some variables can only be used inside a feed loop, others anywhere. Before you output a Twitter feed, you must write the following:
 
-`{$tweets_start}
+```
+{$tweets_start}
 // Your other data here ...
-{$tweets_end}`
+{$tweets_end}
+```
 
 Once inside a loop, you can use any of the following variables:
 
-`{$tweet_text} - the text of the tweet
+```
+{$tweet_text} - the text of the tweet
 {$tweet_time} - the time of the tweet
 {$tweet_location} - the location of the tweet (example: Budapest)
 {$retweet} - outputs a ready retweet link with the text Retweet, opens in new tab
@@ -204,11 +221,13 @@ Once inside a loop, you can use any of the following variables:
 {$retweet_link} - returns URL of retweet link
 {$reply_link} - returns URL of reply link
 {$favorite_link} - returns URL of favorite link
-{$tweet_link} - returns URL of tweet`
+{$tweet_link} - returns URL of tweet
+```
 
 Outside a loop or inside a loop you can use the following:
 
-`{$profile_image} - the url to the profile image of the user
+```
+{$profile_image} - the url to the profile image of the user
 {$user_real_name} - the real name of the user
 {$user_twitter_name} - username of the twitter user
 {$url} - website url of the user
@@ -219,17 +238,20 @@ Outside a loop or inside a loop you can use the following:
 {$profile_image_normal_url} - return URL of tweet profile image - 48x48 px size (if retweet in loop, returns original tweet profile image)
 {$profile_image_bigger_url} - return URL of tweet profile image - 73x73 px size (if retweet in loop, returns original tweet profile image)
 {$profile_image_mini_url} - return URL of tweet profile image - 24x24px size (if retweet in loop, returns original tweet profile image)
-{$profile_image_original_url} - return URL of tweet profile image - original size (if retweet in loop, returns original tweet profile image)`
+{$profile_image_original_url} - return URL of tweet profile image - original size (if retweet in loop, returns original tweet profile image)
+```
 
 For example if you want to output Twitter text, a retweet link, a custom favorite link and some data behind the feed, you would do the following:
 
-`<ul>
+```
+<ul>
 {$tweets_start}
 	<li>{$tweet_text}<br />on {$tweet_time}<br />{$retweet} | <a href="{$favorite_link}">Favorite this tweet</a></li>
 {$tweets_end}
 </ul>
 
-I have {$follower_count} followers and {$friends_count} friends.`
+I have {$follower_count} followers and {$friends_count} friends.
+```
 
 And this is basically it.
 
